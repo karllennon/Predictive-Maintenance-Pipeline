@@ -44,8 +44,8 @@ df = pd.read_csv('data/ai4i2020.csv')
 validation_issues = validator.validate_data(df)
 
 if not validation_issues:
-    print("✅ Data Integrity Verified. Proceeding to Metadata Extraction...")
+    print("Data Integrity Verified. Proceeding to Metadata Extraction...")
 else:
-    print("❌ Validation Issues Found:")
+    print("Validation Issues Found:")
     for issue in validation_issues:
         print(f" - {issue}")

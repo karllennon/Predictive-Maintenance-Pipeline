@@ -61,7 +61,7 @@ def calculate_roi(y_actual, y_preds):
 
 final_preds = xgb_model.predict(X_test) if xgb_acc > rf_acc else rf_model.predict(X_test)
 total_impact = calculate_roi(y_test, final_preds)
-print(f"💰 Total Financial Impact of Model: ${total_impact:,}")
+print(f"Total Financial Impact of Model: ${total_impact:,}")
 
 # 5. Export for Dashboard
 results_df = X_test.copy()

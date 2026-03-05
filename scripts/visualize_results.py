@@ -2,6 +2,8 @@
 PROJECT: Predictive Maintenance & Visual Analytics
 PURPOSE: Translating model outputs into multi-dimensional stakeholder visualizations.
 """
+# NOTE: Requires output from complete_pipeline.py — column names must be pre-sanitized
+# (brackets removed from feature names). Do NOT run on raw ai4i2020.csv directly.
 
 import plotly.express as px
 import plotly.graph_objects as go

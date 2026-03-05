@@ -53,6 +53,7 @@ print(f"XGBoost Accuracy: {xgb_acc:.4f}")
 
 # 4. Economic ROI Engine
 def calculate_roi(y_actual, y_preds):
+    y_actual = y_actual.reset_index(drop=True)  # Align pandas Series index with numpy array     
     maintenance_cost = 500
     failure_cost = 5000
     savings = sum((y_actual == 1) & (y_preds == 1)) * (failure_cost - maintenance_cost)
@@ -67,6 +68,6 @@ print(f"Total Financial Impact of Model: ${total_impact:,}")
 results_df = X_test.copy()
 results_df['Actual_Failure'] = y_test
 results_df['Predicted_Failure'] = final_preds
-results_df['ROI_Impact'] = total_impact
+results_df['Total_Model_ROI'] = total_impact
 results_df.to_csv('output/final_dashboard_data.csv', index=False)
 print("Final Data Exported!")

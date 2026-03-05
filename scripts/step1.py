@@ -35,6 +35,16 @@ class DataReliabilityLayer:
         if not invalid_temp.empty:
             reports.append(f"ALERT: {len(invalid_temp)} rows found with Air Temp outside normal range (280K-320K)")
 
+         # Rotational speed sanity gate (typical industrial range: 1000–3000 rpm)
+         invalid_speed = df[(df['Rotational speed [rpm]'] < 1000) | (df['Rotational speed [rpm]'] > 3000)]
+         if not invalid_speed.empty:
+             reports.append(f"ALERT: {len(invalid_speed)} rows found with Rotational Speed outside normal range (1000-3000 rpm)")
+
+         # Torque sanity gate (typical industrial range: 3–80 Nm)
+         invalid_torque = df[(df['Torque [Nm]'] < 3) | (df['Torque [Nm]'] > 80)]
+         if not invalid_torque.empty:
+             reports.append(f"ALERT: {len(invalid_torque)} rows found with Torque outside normal range (3-80 Nm)")
+
         return reports
 
 # --- Usage ---

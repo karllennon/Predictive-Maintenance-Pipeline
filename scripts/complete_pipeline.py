@@ -14,7 +14,7 @@ from sklearn.metrics import classification_report
 
 # 1. Load and Verify
 df = pd.read_csv('data/ai4i2020.csv')
-print("✅ Data Loaded.")
+print(" Data Loaded.")
 
 # 2. Metadata Extraction
 def extract_metadata(df):
@@ -24,7 +24,7 @@ def extract_metadata(df):
     return df
 
 df = extract_metadata(df)
-print("✅ Metadata Extracted.")
+print(" Metadata Extracted.")
 
 # 3. Predictive Modeling
 features = ['Air temperature [K]', 'Process temperature [K]', 'Rotational speed [rpm]', 'Torque [Nm]', 'Tool wear [min]']
@@ -48,8 +48,8 @@ xgb_model = XGBClassifier(n_estimators=100, learning_rate=0.1, max_depth=5, rand
 xgb_model.fit(X_train, y_train)
 xgb_acc = xgb_model.score(X_test, y_test)
 
-print(f"✅ Random Forest Accuracy: {rf_acc:.4f}")
-print(f"✅ XGBoost Accuracy: {xgb_acc:.4f}")
+print(f"Random Forest Accuracy: {rf_acc:.4f}")
+print(f"XGBoost Accuracy: {xgb_acc:.4f}")
 
 # 4. Economic ROI Engine
 def calculate_roi(y_actual, y_preds):
@@ -69,4 +69,4 @@ results_df['Actual_Failure'] = y_test
 results_df['Predicted_Failure'] = final_preds
 results_df['ROI_Impact'] = total_impact
 results_df.to_csv('output/final_dashboard_data.csv', index=False)
-print("✅ Final Data Exported!")
+print("Final Data Exported!")

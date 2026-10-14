@@ -1,32 +1,39 @@
 # Predictive Maintenance & Financial Risk Pipeline
 
-## Project Overview
-This project addresses industrial downtime costs by applying **Ensemble Learning** to sensor telemetry. By identifying mechanical failure signatures before they occur, the system enables an early-intervention strategy that maximizes asset uptime and reduces catastrophic repair costs.
+Predicts machine failures from sensor readings and chooses the alert threshold that minimizes maintenance cost, using the UCI AI4I 2020 dataset (10,000 records).
 
-## Key Impact
-- **Accuracy:** Achieved a peak predictive accuracy of **98.45%** using an optimized **XGBoost** model.
-- **Financial ROI:** Identified a net operational savings of **$65,500** through a custom-built economic utility engine.
-- **Reliability:** Implemented a multi-stage validation layer to ensure data integrity and prevent model drift.
+## Results (2,000-record test set, 61 failures)
 
-## Technical Stack
-- **Languages:** Python 3.13
-- **ML Models:** XGBoost (Challenger), Random Forest (Baseline)
-- **Analytics:** Pandas, NumPy, Scikit-learn
-- **Visualization:** Plotly (3D Operational Maps & Radar DNA Profiles)
+| | Default threshold (0.50) | Cost-optimal threshold (0.10) |
+|---|---|---|
+| Failures caught (recall) | 59% | **85%** |
+| Alerts that were real failures (precision) | 82% | 40% |
+| Net savings | $33,000 | **$149,500** |
 
-## System Architecture
-1. **Reliability Layer (`step1.py`):** Automated schema validation and sensor range-gatekeeping.
-2. **Modeling Engine (`complete_pipeline.py`):** Feature engineering and competitive model evaluation (RF vs. XGBoost).
-3. **Economic Engine:** Integration of business logic to calculate ROI based on maintenance costs vs. failure losses.
-4. **Visual Analytics (`visualize_results.py`):** Interactive stakeholder dashboards for risk signature identification.
+- **Model:** Random Forest (98.35% accuracy) narrowly beat XGBoost (98.30%). Accuracy is not a useful measure here: 96.95% of machines never fail, so a model that always predicts "no failure" scores almost as high.
+- **Cost-optimal threshold:** a missed failure is assumed to cost $5,000 and a maintenance visit $500. The threshold is chosen on cross-validated predictions from the training set, so the test set is never used for tuning. At 0.10, the model accepts more false alarms because each costs one-tenth of a missed failure.
+- **Limitation:** the test set has only 61 failures, so these percentages would shift by a few points on a different split. The costs are illustrative assumptions, not real maintenance data.
 
-## Visual Insights
-- **3D Risk Map:** Visualizes high-risk clusters across Torque, RPM, and Temperature.
-- **Radar DNA Profile:** Identifies "Squeeze" patterns between Torque and Tool Wear that signal imminent failure.
+## How It Works
+1. **Data checks (`step1.py`):** checks for required columns, missing values, and sensor readings outside expected ranges (air temperature, rotational speed, torque).
+2. **Modeling (`complete_pipeline.py`):** trains Random Forest and XGBoost on five sensor features, keeps the more accurate model, then picks the cost-minimizing alert threshold.
+3. **Cost model:** net savings = savings from caught failures, minus losses from missed failures, minus the cost of false alarms.
+4. **Visuals (`visualize_results.py`):** a 3D scatter of test machines by air temperature, torque, and rotational speed, colored by actual failure, and a radar chart comparing average normalized sensor readings for failed vs. healthy machines.
 
- <img width="726" height="726" alt="3D_Operational_Risk_Map" src="https://github.com/user-attachments/assets/7ac6c6d5-3f08-47d9-8170-34b1897dc21c" />
+<img width="726" height="726" alt="3D_Operational_Risk_Map" src="https://github.com/user-attachments/assets/7ac6c6d5-3f08-47d9-8170-34b1897dc21c" />
 <img width="722" height="652" alt="Failure_DNA_Radar_Profile" src="https://github.com/user-attachments/assets/0e6361b0-7969-4d74-a911-3467cd5cd12b" />
 
+## Tech Stack
+Python 3.13, pandas, NumPy, scikit-learn, XGBoost, Plotly
+
+## How to Run
+1. Install packages: `pip install pandas numpy scikit-learn xgboost plotly`
+2. From the repo root, run in order:
+   - `python scripts/step1.py`
+   - `python scripts/complete_pipeline.py`
+   - `python scripts/visualize_results.py`
+
+The dataset is included in `data/` under its CC BY 4.0 license.
 
 ---
-*Developed for professional portfolio use. Data sourced from UCI Machine Learning Repository.*
+*Data: AI4I 2020 Predictive Maintenance Dataset, UCI Machine Learning Repository.*
